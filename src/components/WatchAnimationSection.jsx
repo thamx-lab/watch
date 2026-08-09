@@ -4,7 +4,6 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import WatchCanvas from './WatchCanvas';
 import WatchDescriptionPanel from './WatchDescriptionPanel';
 import ComponentHotspot from './ComponentHotspot';
-import ComponentTimeline from './ComponentTimeline';
 import PrecisionModeToggle from './PrecisionModeToggle';
 import { TOTAL_FRAMES, getComponentForFrame } from '../config/watchTimeline';
 
@@ -110,21 +109,7 @@ export default function WatchAnimationSection({ onProgressUpdate, onImagesLoaded
   // SINGLE SOURCE OF TRUTH: active component derived from currentFrameIndex
   const activeComponent = getComponentForFrame(currentFrameIndex);
 
-  // Timeline click handler: Smoothly scroll to selected component's start frame
-  const handleTimelineSelect = (targetStartFrame) => {
-    const st = ScrollTrigger.getById('watch-scrub-trigger');
-    if (!st) return;
-
-    const targetProgress = (targetStartFrame - 1) / 299;
-    const scrollPos = st.start + targetProgress * (st.end - st.start);
-
-    window.scrollTo({
-      top: scrollPos,
-      behavior: 'smooth'
-    });
-  };
-
-  // Handlers for Feature 05 (Final Exploded View Drag Interaction)
+  // Handlers for Final Exploded View Drag Interaction
   const handleMouseDown = (e) => {
     if (currentFrameIndex >= 290) {
       setIsDragging(true);
@@ -173,7 +158,7 @@ export default function WatchAnimationSection({ onProgressUpdate, onImagesLoaded
       ref={sectionRef}
       className="relative w-full h-screen bg-[#000000] overflow-hidden"
     >
-      {/* FEATURE 03 — Precision Mode Toggle Button */}
+      {/* Precision Mode Toggle Button */}
       <PrecisionModeToggle
         precisionMode={precisionMode}
         onToggle={() => setPrecisionMode(!precisionMode)}
@@ -189,7 +174,7 @@ export default function WatchAnimationSection({ onProgressUpdate, onImagesLoaded
         onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
       >
-        {/* Centered Watch Canvas & Feature 04 Spotlight */}
+        {/* Centered Watch Canvas & Spotlight */}
         <div className="w-full h-full max-w-6xl max-h-[85vh] flex items-center justify-center relative bg-[#000000]">
           <WatchCanvas
             currentFrameIndex={currentFrameIndex}
@@ -199,7 +184,7 @@ export default function WatchAnimationSection({ onProgressUpdate, onImagesLoaded
             dragOffset={dragOffset}
           />
 
-          {/* FEATURE 01 — Component Hotspot (Renders dot + label over active component) */}
+          {/* Component Hotspot (Dot + Label over active component) */}
           <ComponentHotspot activeComponent={activeComponent} />
         </div>
 
@@ -208,13 +193,7 @@ export default function WatchAnimationSection({ onProgressUpdate, onImagesLoaded
           <WatchDescriptionPanel stage={activeComponent} />
         </div>
 
-        {/* FEATURE 02 — Component Timeline (Far right edge list) */}
-        <ComponentTimeline
-          activeComponent={activeComponent}
-          onSelectComponent={handleTimelineSelect}
-        />
-
-        {/* FEATURE 05 — Final Exploded View Interaction Cue (At Frame 300) */}
+        {/* Final Exploded View Interaction Cue (At Frame 300) */}
         {currentFrameIndex >= 290 && (
           <div className="absolute bottom-8 left-1/2 -translate-x-1/2 font-mono text-[11px] text-[#FFFFFF]/70 tracking-widest uppercase pointer-events-none animate-pulse">
             DRAG HORIZONTALLY TO EXPLORE EXPLODED VIEW
